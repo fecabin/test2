@@ -1,0 +1,30 @@
+/* You can add global styles to this file, and also import other style files */
+@import "../node_modules/ag-grid-community/dist/styles/ag-grid.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-alpine.css";
+@import "../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css";
+
+/*CDS*/
+@import '~normalize.css/normalize.css'; 
+@import '~@cds/core/global.min'; 
+@import '~@cds/core/styles/module.shims.min'; 
+@import '~@cds/city/css/bundles/default.min'; 
+
+.ag-header-cell-label {
+    justify-content: center;
+    text-align: center;
+  
+}
+.ag-header-cell-content{
+   
+    text-align: center;
+}
+.grid-cell-centered {
+    text-align: center;
+    color:green;
+  }
+  .card-img-header {
+    background-color:hsl(93, 52%, 88%);
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+  }
