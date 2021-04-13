@@ -1,14 +1,149 @@
 //our root app component
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ViewChild,ElementRef,AfterViewInit } from '@angular/core';
 import '@cds/core/divider/register.js';
+
+import { ExeDashboardService } from "../../service/exeDashboard.service";
+import { HttpClient } from '@angular/common/http';
+
+import { HighlightComponent } from '../../widget/hightlight/highlight.component';
+import * as echarts from 'echarts';
 @Component({
   selector: 'app-execDashboard',
   templateUrl: './execDashboard.html',
   styleUrls: [ './execDashboard.component.css' ]
 })
-export class ExecDashboardComponent {
+export class ExecDashboardComponent implements AfterViewInit{
 
+    @ViewChild("prpWeeklyTrendChart") prpWeeklyTrendChartRef: ElementRef;
+    @ViewChild("prpWeeklyHighlight") prpWeeklyHighlightRef: HighlightComponent;
+    constructor(private exeDashboardService: ExeDashboardService,
+        private http:HttpClient){
+       
+    }
+    ngAfterViewInit(): void {
+        this.exeDashboardService.getPrpWeeklyTrend().subscribe(
+            respData => {
+              console.log(this.prpWeeklyTrendChartData);
+                if(respData!=null){
+                  this.prpWeeklyTrendChartData.xAxis.data=respData.x;
+                  this.prpWeeklyTrendChartData.series[0].data=respData.y[0];
+                  this.prpWeeklyTrendChartData.series[1].data=respData.y[1];
+                }
+                console.log(this.prpWeeklyTrendChartRef);
+    
+                echarts.init(this.prpWeeklyTrendChartRef.nativeElement)
+                .setOption(this.prpWeeklyTrendChartData,true);
+            },
+            error => {
+                console.log(error);
+            }
+          )
+        //Setting Highlight    
+        this.prpWeeklyHighlightRef.setData("bg-success","PRP","4.1","ea",null);  
+    }
+
+    public prpMonthlyTrend:any;
+
+    public prpWeeklyTrend:any;
+
+    public maskStopLineTrend:any;
+
+    ngOnInit(): void {
+   
+       
+        // this.exeDashboardService.getPrpWeeklyTrend().subscribe(
+        //     dataList => {
+        //         this.prpWeeklyTrend = dataList
+        //     },
+        //     error => {
+        //         console.log(error);
+        //     }
+        //   )
+        // this.exeDashboardService.getMaskStopLineTrend().subscribe(
+        //     dataList => {
+        //         this.maskStopLineTrend = dataList
+        //     },
+        //     error => {
+        //         console.log(error);
+        //     }
+        //   )  
+    };
+
+    
+
+    public prpMonthlyTrendChart:any;
+
+
+    public trendChartOption:any={
+        color: ['#91cc75', '#FFBF00', '#FF0087', '#FF0087', '#FFBF00'],
+          tooltip: {
+              trigger: 'axis',
+              axisPointer: {
+                  type: 'shadow'
+              }
+          },
+          legend: {
+            bottom: '10',
+            left: 'center',
+              data: ['Total', 'Health','Warning', 'Stop-Line']
+          },
+          title: {
+            text: 'Mask Stop Line Trend',
+            subtext:'',
+            left: 'center'
+          },
+          toolbox: {
+              feature: {
+                  dataView: {show: true, readOnly: false},
+                  saveAsImage: {show: true}
+              }
+          },
+          xAxis: [
+              {
+                  type: 'category',
+                  axisTick: {show: false},
+                  data: ['0302', '0303', '0304', '0305', '0306','0307','0308']
+              }
+          ],
+          yAxis: [
+              {
+                  type: 'value'
+              }
+          ],
+          series: [
+              
+              {
+                  name: 'Health',
+                  type: 'bar',
+                  stack:'Total',
+                  emphasis: {
+                      focus: 'series'
+                  },
+                  data: [340,344, 358, 380, 390,421,410]
+              },
+              {
+                  name: 'Warning',
+                  type: 'bar',
+                  stack:'Total',
+                  emphasis: {
+                      focus: 'series'
+                  },
+                  data: [6, 1,2, 5, 14,5,12]
+              },
+              {
+                name: 'Stop-Line',
+                type: 'bar',
+                stack:'Total',
+                emphasis: {
+                    focus: 'series'
+                },
+                data: [4, 11, 2, 5, 6,4,8]
+            }
+              
+          ]
+      
+      };
   public widgetOption = {
     color: ['#93b7e3', '#FFBF00', '#73c0de', '#FF0087', '#FFBF00'],
     tooltip: {
@@ -148,12 +283,12 @@ public  option = {
 };
 
   public color: ['#93b7e3', '#FFBF00', '#73c0de', '#FF0087', '#FFBF00'];
-  public chartOption: any =   {
+  public prpWeeklyTrendChartData: any =   {
     color: ['#93b7e3', '#FFBF00', '#73c0de', '#FF0087', '#FFBF00'],
-   tooltip: {
+    tooltip: {
        trigger: 'axis',
        
-   },
+    },
     title: {
            text: 'PRP 2021Q1',
            subtext:'Overall',
@@ -233,6 +368,94 @@ public  option = {
        }
    ]
 };
+
+
+public pellicleRuptureTop10: any =   {
+   color: ['#73c0de', '#f3a43b', '#73c0de', '#FF0087', '#FFBF00'],
+   tooltip: {
+       trigger: 'axis',
+       
+   },
+    title: {
+           text: 'TOP 10 EUV Pellicle EOP Drift(%)',
+           subtext:'',
+           left: 'center'
+       },
+   toolbox: {
+       feature: {
+           dataView: {show: true, readOnly: false},
+           saveAsImage: {show: true}
+       }
+   },
+   legend: {
+      bottom: '10',
+      left: 'center',
+      data: ['Wafer Move', 'EOP Drift']
+   },
+   xAxis: [
+       {
+           type: 'category',
+           data: ['TMPL18-816A-5', 'TMKC19-760B-5', 'TMIG44-710B-5', 'TMLX31-120A-4', 'TMVB66-126B-2', 'TMRR99-996A-4', 'TMRR88-881B-4', 'TMRR39-450B-2', 'TMCA56-900B-2', 'TMEF85-552A-2'],
+           axisPointer: {
+               type: 'shadow'
+           }
+       }
+   ],
+   yAxis: [
+       {
+           type: 'value',
+           name: 'Wafer Move(pcs)',
+           min: 0,
+           max: 1400,
+           interval: 200,
+           axisLabel: {
+               formatter: '{value}'
+           }
+       },
+       {
+           type: 'value',
+           name: 'EOP Drift(%)',
+           min: 0,
+           max: 12,
+           interval: 1,
+           axisLabel: {
+               formatter: '{value}'
+           }
+       }
+   ],
+   series: [
+      
+       {
+           name: 'Wafer Move',
+           type: 'bar',
+           label: {
+               show: true,
+               position: 'inside'
+           },
+           data: [948, 851,  801, 697, 811,796, 994,685,569,506]
+       },
+       {
+           name: 'EOP Drift',
+           type: 'line',
+           yAxisIndex: 1,
+           label: {
+               show: true,
+               position: 'inside'
+           },
+           markLine: {
+               silent: true,
+               lineStyle: {
+                   color: 'red'
+               },
+               data: [{
+                   yAxis: 8
+               }]
+           },
+           data: [9.0,8.3, 8.3, 8.2, 7.6, 7.3, 6.2, 6.0, 5.3, 5.1, 4.8, 4.7]
+       }
+   ]
+  };
+
 //APE301
 public chartOptionAPE301: any =   {
   color: ['#93b7e3', '#FFBF00', '#73c0de', '#FF0087', '#FFBF00'],
@@ -321,7 +544,7 @@ public chartOptionAPE301: any =   {
 };
 
 public chartOptionAPE302: any =   {
-  color: ['#93b7e3', '#FFBF00', '#73c0de', '#FF0087', '#FFBF00'],
+ color: ['#93b7e3', '#FFBF00', '#73c0de', '#FF0087', '#FFBF00'],
  tooltip: {
      trigger: 'axis',
      
