@@ -4,7 +4,7 @@ import { TodoItem } from "./todoItem";
 import { CaseCenterService } from "./service/caseCenter.service";
 import { CaseSummaryRepository } from "./model/caseSummary.repository";
 import { CaseSummary } from "./model/caseSummary.model";
-import { ClarityModule } from '@clr/angular';
+
 import '@cds/core/button/register.js';
 import { CdsModule } from '@cds/angular';
 import { ClarityIcons, userIcon } from '@cds/core/icon';
@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
       this.detailCellRenderer = 'myDetailCellRenderer';
       this.frameworkComponents = { myDetailCellRenderer: DetailCellRenderer };
     }
-  
+  public open=false;
   private detailCellRenderer;
   private frameworkComponents;
   

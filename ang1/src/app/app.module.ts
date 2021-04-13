@@ -15,15 +15,18 @@ import '@cds/core/alert/register.js';
 //Grid Custom detail
 import { DetailCellRenderer } from './detail-cell-renderer.component';
  
- 
+import { EditDefectModalComponent } from './page/edit-defect-modal/edit-defect-modal.component';
 import { AppRoutingModule } from './app-routing.module';   
       
 import { ExecDashboardComponent } from './page/exec-dashboard/execDashboard.component';
 import { CaseCenterComponent } from './page/case-center/caseCenter.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { MaskStopLineComponent } from './page/mask-stop-line/maskStopLine.component';
 
+import { HighlightComponent } from './widget/hightlight/highlight.component';
 @NgModule({
   declarations: [
-    AppComponent,DetailCellRenderer,ExecDashboardComponent,CaseCenterComponent
+    AppComponent,DetailCellRenderer,ExecDashboardComponent,CaseCenterComponent,MaskStopLineComponent,EditDefectModalComponent,HighlightComponent
   ],
   imports: [
     BrowserModule, FormsModule,AppRoutingModule,
@@ -34,7 +37,8 @@ import { CaseCenterComponent } from './page/case-center/caseCenter.component';
     NgxEchartsModule.forRoot({
       echarts
     }),
-    AgGridModule.withComponents([DetailCellRenderer])
+    AgGridModule.withComponents([DetailCellRenderer]),
+    NgbModule
     
   ],
   providers: [],

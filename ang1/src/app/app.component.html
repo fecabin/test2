@@ -24,8 +24,10 @@
   </div>
 </div>
 -->
+
 <div class="main-container">
-  <!--
+ 
+<!--
   <header class="header header-8" style="background-color:hsl(198, 0%, 27%);color:hsl(198, 0%, 98%)">
     <div class="branding">
       <a href="javascript:void(0)">
@@ -52,9 +54,9 @@
 -->
   <div class="main-container">
     <div class="content-container">
-      <clr-vertical-nav [clrVerticalNavCollapsible]="true" >
+      <clr-vertical-nav [clrVerticalNavCollapsible]="true">
         <a clrVerticalNavLink routerLink="./execDashboard" routerLinkActive="active">
-          <clr-icon clrVerticalNavIcon shape="Dashboard"></clr-icon>
+          <clr-icon clrVerticalNavIcon shape="Dashboard" size="36px"></clr-icon>
           Executive Dashboard
         </a>
         <a clrVerticalNavLink routerLink="./caseCenter" routerLinkActive="active">
@@ -65,27 +67,60 @@
           <clr-icon shape="library" clrVerticalNavIcon></clr-icon>
           Mask Management
           <clr-vertical-nav-group-children>
-            <a clrVerticalNavLink routerLink="./normal/pidgey" routerLinkActive="active">
-              Mask Stop-line Monitor
-            </a>
             <a clrVerticalNavLink routerLink="./normal/snorlax" routerLinkActive="active">
-              Pellicle Rupture Monitor
+              EUV Pellicle Rupture Monitor
+            </a>
+            <a clrVerticalNavLink routerLink="./maskStopLine" routerLinkActive="active">
+              EUV Mask Stop-line Monitor
             </a>
           </clr-vertical-nav-group-children>
         </clr-vertical-nav-group>
-        <a clrVerticalNavLink routerLink="./grass" routerLinkActive="active">
-          <clr-icon clrVerticalNavIcon shape="line-chart"></clr-icon>
+        <clr-vertical-nav-group routerLinkActive="active">
+          <clr-icon shape="collapse-card" clrVerticalNavIcon></clr-icon>
+          Defect Management
+          <clr-vertical-nav-group-children>
+            <a clrVerticalNavLink routerLink="./frontSideDefect" routerLinkActive="active">
+              Front-Side Defect
+            </a>
+            <a clrVerticalNavLink routerLink="./backSideDefect" routerLinkActive="active">
+              Back-Side Defect
+            </a>
+          </clr-vertical-nav-group-children>
+        </clr-vertical-nav-group>
+        <clr-vertical-nav-group routerLinkActive="active">
+          <clr-icon shape="factory" clrVerticalNavIcon></clr-icon>
+          Tool Management
+          <clr-vertical-nav-group-children>
+            <a clrVerticalNavLink routerLink="./goldenImg" routerLinkActive="active">
+              X8U Golden Image Availibility Report
+            </a>
+            <a clrVerticalNavLink routerLink="./goldenImg" routerLinkActive="active">
+              X8U Golden Image Channel Config.
+            </a>
+          </clr-vertical-nav-group-children>
+        </clr-vertical-nav-group>
+        <clr-vertical-nav-group routerLinkActive="active">
+          <clr-icon shape="bar-chart" clrVerticalNavIcon></clr-icon>
           KPI Management
-        </a>
+          <clr-vertical-nav-group-children>
+            <a clrVerticalNavLink routerLink="./prpMgmt" routerLinkActive="active">
+              PRP
+            </a>
+          </clr-vertical-nav-group-children>
+        </clr-vertical-nav-group>
       </clr-vertical-nav>
       <div class="content-area">
 
        
         <router-outlet></router-outlet>
       </div>
+
+
+     
     </div>
     
   </div>
+ 
   <!--
   <nav class="subnav">
     <ul class="nav">
