@@ -97,22 +97,48 @@ export class MaskStopLineComponent implements OnInit {
       ]
   
   };
-
-  public chartOption: any = {
-    xAxis: {
-      type: 'category',
-      boundaryGap: false,
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+  pieChartOption = {
+    color: ['#91cc75', '#FFBF00', '#FF0087', '#FF0087', '#FFBF00'],
+    title: {
+        text: 'Mask Stop-Line Risk',
+        subtext: '2021Q1',
+        left: 'center'
     },
-    yAxis: {
-      type: 'value'
+    tooltip: {
+        trigger: 'item'
     },
-    series: [{
-      data: [820, 932, 901, 934, 1290, 1430, 1550, 1200, 1650.1450, 1680.1890],
-      type: 'line',
-      areaStyle: {}
-    }]
-  };
+    legend: {
+      bottom: '10',
+      left: 'center'
+    },
+    series: [
+        {
+            name: 'Elements',
+            type: 'pie',
+            radius: '50%',
+            label: {
+              show: true,
+              formatter: function (params) {
+                return  params.value+"%";
+              },
+              position: 'inside'
+          },
+            data: [
+                {value: 90, name: 'Health'},
+                {value: 9, name: 'Warning'},
+                {value: 1, name: 'Stop-Line'}
+                
+            ],
+            emphasis: {
+                itemStyle: {
+                    shadowBlur: 10,
+                    shadowOffsetX: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        }
+    ]
+};
   ngOnInit(): void {
    
     // this.caseCenterService.getCaseCenterSummaries().subscribe(
