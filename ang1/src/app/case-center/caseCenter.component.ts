@@ -6,11 +6,16 @@ import { DetailCellRenderer } from '../../detail-cell-renderer.component';
 import { ButtonRendererComponent } from '../../renderer/button-cell-renderer.component';
 import { Component, OnInit,ViewChild } from "@angular/core";
 import 'ag-grid-enterprise';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ClarityModule } from '@clr/angular';
+
 import { CaseDetail } from 'src/app/caseDetail';
 import { DefectInfo } from 'src/app/DefectInfo';
+import '@cds/core/modal/register.js';
+import '@cds/core/modal/register.js';
+import '@cds/core/modal/modal-actions.element';
+import '@cds/core/modal/modal-header.element';
+import '@cds/core/modal/modal-content.element';
 
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { EditDefectModalComponent } from '../edit-defect-modal/edit-defect-modal.component';
 @Component({
   selector: 'app-caseCenter',
@@ -21,7 +26,9 @@ import { EditDefectModalComponent } from '../edit-defect-modal/edit-defect-modal
 export class CaseCenterComponent implements OnInit {
   
    @ViewChild(EditDefectModalComponent) public modal: EditDefectModalComponent;
-  
+  public qryDateFrom;
+  public qryDateTo;
+  public qryMask;
   public caseSummaryOpen=true;
   public caseDetailOpen=true;
    editDefect:DefectInfo = {maskId:"TMIG",ebNumber:"EB",defectId:2,defectNo:"001",locX:"121",locY:"212",defectCd:"1C",
@@ -42,9 +49,33 @@ export class CaseCenterComponent implements OnInit {
       this.frameworkComponents = { myDetailCellRenderer: DetailCellRenderer, 
         btnCellRenderer: ButtonRendererComponent };
     }
-  
-  public caseEditData:DefectInfo;
 
+
+  query(){
+    console.log(this.qryDateFrom);
+    console.log(this.qryDateTo);
+    this.qryCaseSummaries(this.qryDateFrom,this.qryDateTo,this.qryMask);
+
+
+  }  
+  qryCaseSummaries(qryDateFrom,qryDateTo,maskId){
+    this.caseCenterService.getCaseCenterSummariesByCond(qryDateFrom,qryDateTo,maskId).subscribe(
+      dataList => {
+          this.caseCenterRowData = dataList
+      },
+      error => {
+          console.log(error);
+      });
+   // return this.caseCenterService.getCaseCenterSummaries();
+    //return this.caseCenterService.getCaseCenterSummariesByCond(qryDateFrom,qryDateTo,maskId);
+
+  }
+  public editOpen;
+  public caseEditData:DefectInfo;
+  openEdit() {
+    this.editOpen = true;
+ 
+  }
   private detailCellRenderer;
   private frameworkComponents;
   public editModalOpen=true;
@@ -81,7 +112,7 @@ export class CaseCenterComponent implements OnInit {
   private caseSummaryColumnApi;
   private caseGridApi;
   private caseGridColumnApi;
-  
+  public selCaseDetailList;
    /**
    * Close the modal and reset error states
    */
@@ -107,14 +138,20 @@ export class CaseCenterComponent implements OnInit {
     // }
   }
   //AG-Grid Case Summary Row Selection
-  onSelectionChanged(params) {
-   
+  onCaseSummarySelectionChanged(params) {
+    console.log(params);
     var selectedRows = this.caseSummaryGridApi.getSelectedRows();
     // document.querySelector('#selectedRows').innerHTML =
     //   selectedRows.length === 1 ? selectedRows[0].athlete : '';
-
-    console.log(selectedRows[0]);  
+    this.selCaseDetailList=selectedRows[0].criticalDftCases;
+    console.log(this.selCaseDetailList);  
   }
+  onCaseDetailSelectionChanged(selected) {
+    console.log(selected);
+    this.selectedCaseObj=selected.caseDetail;
+    console.log(this.selCaseDetailList);  
+  }
+ 
   onCaseSelectionChanged(params) {
    
     var selectedRows = this.caseGridApi.getSelectedRows();
@@ -123,13 +160,7 @@ export class CaseCenterComponent implements OnInit {
 
     console.log(selectedRows[0]);  
   }
-  qryCaseSummaries(){
-    
-
-      
-    return this.caseCenterService.getCaseCenterSummaries();
-
-  }
+ 
   caseCenterRowModelType="serverSide";
   defaultColDef = {
     editable: false,
@@ -143,11 +174,8 @@ export class CaseCenterComponent implements OnInit {
   caseSummaryColumnDefs = [
     { field: 'procStatus',headerName:'Status' ,sortable: false,width:'130px',cellClass:'ag-header-cell-content'},
     { field: 'criticalDftCnt',headerName:'1C' ,sortable: true,width:'130px',cellClass:'ag-header-cell-content'},
-    { field: 'onoDftCnt' ,headerName:'OnO' ,sortable: true,width:'130px',cellClass:'ag-header-cell-content'},
     //{ field: 'pellicleDftCnt',headerName:'Pellicle',sortable: true ,width:'120px',cellClass:'ag-header-cell-content'},
-    { field: 'wiaRequalCnt',headerName:'WIA Requal',sortable: true ,width:'130px',cellClass:'ag-header-cell-content'},
-    { field: 'wiaNtoCnt',headerName:'WIA NTO',sortable: true ,width:'130px',cellClass:'ag-header-cell-content'},
-    { field: 'wiaRrCnt',headerName:'WIA RR',sortable: true ,width:'130px',cellClass:'ag-header-cell-content'},
+   
     //{ field: 'rbiCenterCnt',headerName:'RBI Center',sortable: true ,width:'120px',cellClass:'ag-header-cell-content'},
     //{ field: 'rbiEdgeCnt',headerName:'RBI Edge',sortable: true ,width:'120px',cellClass:'ag-header-cell-content'},
     //{ field: 'rbiBx100Cnt',headerName:'BX100',sortable: true ,width:'120px',cellClass:'ag-header-cell-content'},
@@ -222,7 +250,7 @@ export class CaseCenterComponent implements OnInit {
       node.setExpanded(false);
     });
   }
-  onCaseCennterGridReady(params) {
+  onCaseSummaryGridReady(params) {
     this.caseSummaryGridApi = params.api;
     this.caseSummaryColumnApi = params.columnApi;
   }
