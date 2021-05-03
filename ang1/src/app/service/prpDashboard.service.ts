@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -32,4 +32,18 @@ export class PrpDashboardService {
   getGldnImgChanelTop10Trend():Observable<any> {
     return this.http.get(`${this.baseUrl}/pellicleRuptureTrend`);
   }
+
+  getPrpDashboardByCond(qryDtFrom:string,qryDtTo:string,qryMask:string):Observable<any>{
+    qryMask="TMIG";
+    const parms=new HttpParams()
+      .set('qryDtFrom',qryDtFrom)
+      .set('qryDtTo',qryDtTo)
+      .set('qryMask',qryMask);
+    return this.http.get(`${this.baseUrl}/getPrpDashboardByCond`,{params:parms});
+  }
+
+  editPrpData(){
+
+  }
+
 }
